@@ -280,8 +280,10 @@ sub extrude_path {
     my $e = $self->extruder->e_per_mm3 * $path->mm3_per_mm;
     $e = 0 if !$self->config->get_extrusion_axis;
 
-    #declare linetype ""
+    #declare linetype, linewidth and lineheight
     my $linetype = "";
+    my $linewidth = $path->width;
+    my $lineheight = $path->height;
 
     # set speed
     my $F;
@@ -324,7 +326,7 @@ sub extrude_path {
             $self->shift_x - $self->extruder->extruder_offset->x,
             $self->shift_y - $self->extruder->extruder_offset->y,  #,,
             $self->config->get_extrusion_axis,
-            $self->config->gcode_comments ? " ; $description with linetype = $linetype" : "");
+            $self->config->gcode_comments ? " ;Type=$linetype,line_w=$linewidth,line_h=$lineheight" : ""); #$description
 
         if ($self->enable_wipe) {
             $self->wipe_path($path->polyline->clone);
